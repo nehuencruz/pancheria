@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>El Mejor Pancho de San Fernando</title>
+  <meta name="description" content="El Mejor Pancho de San Fernando. Panchos hechos al momento, salsas caseras y combos. Abierto de lunes a sábados de 11 a 22 hs." />
+  <meta name="theme-color" content="#121110" />
+  <meta property="og:title" content="El Mejor Pancho de San Fernando" />
+  <meta property="og:description" content="Panchos hechos al momento. Lunes a sábados de 11 a 22 hs." />
+  <meta property="og:image" content="assets/logo.png" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
+
+  <link rel="preload" href="assets/fonts/bowlby-one.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============ PRELOADER ============ -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <img src="assets/logo.webp" alt="" class="preloader__logo" width="160" height="160" />
+      <div class="preloader__count"><span id="loadCount">0</span>%</div>
+      <p class="preloader__text">Calentando la plancha…</p>
+    </div>
+    <div class="preloader__curtain preloader__curtain--1"></div>
+    <div class="preloader__curtain preloader__curtain--2"></div>
+  </div>
+
+  <!-- Overlays -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><div class="cursor__dot"></div><div class="cursor__ring"><span class="cursor__label"></span></div></div>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__brand" aria-label="Inicio">
+      <img src="assets/logo.webp" alt="" width="44" height="44" />
+      <span>El Mejor<br />Pancho</span>
+    </a>
+    <nav class="nav__links" aria-label="Principal">
+      <a href="#menu" data-cursor="Ver">Menú</a>
+      <a href="#nosotros" data-cursor="Ver">Nosotros</a>
+      <a href="#horarios" data-cursor="Ver">Horarios</a>
+      <a href="#contacto" data-cursor="Ver">Contacto</a>
+    </nav>
+    <div class="nav__right">
+      <span class="status-pill" data-status>
+        <i class="status-pill__dot"></i><span data-status-text>Consultando…</span>
+      </span>
+      <a href="#contacto" class="btn btn--primary btn--sm magnetic" data-cursor="¡Dale!"><span>Pedir ahora</span></a>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav>
+      <a href="#menu"><small>01</small>Menú</a>
+      <a href="#nosotros"><small>02</small>Nosotros</a>
+      <a href="#horarios"><small>03</small>Horarios</a>
+      <a href="#contacto"><small>04</small>Contacto</a>
+    </nav>
+    <p class="mobile-menu__foot">Lun a Sáb · 11 a 22 hs · San Fernando</p>
+  </div>
+
+  <main id="top">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__glow hero__glow--red"></div>
+        <div class="hero__glow hero__glow--mustard"></div>
+        <div class="hero__grid"></div>
+      </div>
+
+      <div class="hero__eyebrow reveal-up">
+        <span class="star">★</span> San Fernando · Buenos Aires <span class="star">★</span>
+      </div>
+
+      <h1 class="hero__title" aria-label="El mejor pancho">
+        <span class="hero__line"><span class="split">EL MEJOR</span></span>
+        <span class="hero__line hero__line--big"><span class="split">PANCHO</span></span>
+      </h1>
+
+      <div class="hero__badge" data-parallax="0.04">
+        <svg class="hero__burst" viewBox="0 0 400 400" aria-hidden="true">
+          <polygon id="burstShape" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" points="" />
+        </svg>
+        <svg class="hero__ring" viewBox="0 0 300 300" aria-hidden="true">
+          <defs><path id="circlePath" d="M150,150 m-128,0 a128,128 0 1,1 256,0 a128,128 0 1,1 -256,0" /></defs>
+          <text><textPath href="#circlePath">HECHO AL MOMENTO ★ PAN TOSTADITO ★ SALSAS CASERAS ★ DE SAN FERNANDO ★ </textPath></text>
+        </svg>
+        <img src="assets/logo.webp" alt="Logo de El Mejor Pancho de San Fernando: un pancho sonriente con gorra y zapatillas" class="hero__logo" width="720" height="720" />
+      </div>
+
+      <p class="hero__script reveal-up">de San Fernando</p>
+
+      <div class="hero__bottom">
+        <p class="hero__lead reveal-up">
+          Pan tibio, salchicha a la plancha y la salsa que se te ocurra.
+          Simple, rápido y <em>riquísimo</em>. Así se hace un pancho de verdad.
+        </p>
+        <div class="hero__ctas reveal-up">
+          <a href="#menu" class="btn btn--primary magnetic" data-cursor="Ver"><span>Ver el menú</span><i class="btn__arrow">→</i></a>
+          <a href="#horarios" class="btn btn--ghost magnetic" data-cursor="Ver"><span>Lun–Sáb · 11 a 22 hs</span></a>
+        </div>
+      </div>
+
+      <!-- Floating stickers -->
+      <div class="sticker sticker--1" data-parallax="-0.08" aria-hidden="true"><span>100%<br />rico</span></div>
+      <div class="sticker sticker--2" data-parallax="0.1" aria-hidden="true">★</div>
+      <div class="sticker sticker--3" data-parallax="-0.06" aria-hidden="true"><span>¡Al toque!</span></div>
+      <div class="sticker sticker--4" data-parallax="0.07" aria-hidden="true">✌</div>
+
+      <a href="#marquee" class="hero__scroll" aria-label="Bajar">
+        <span>Scroll</span><i></i>
+      </a>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <section class="marquees" id="marquee" aria-label="Lo que hacemos">
+      <div class="marquee marquee--red">
+        <div class="marquee__track">
+          <span>PANCHOS</span><b>★</b><span>SALSAS CASERAS</span><b>★</b><span>PAPAS PAY</span><b>★</b><span>COMBOS</span><b>★</b>
+          <span>PANCHOS</span><b>★</b><span>SALSAS CASERAS</span><b>★</b><span>PAPAS PAY</span><b>★</b><span>COMBOS</span><b>★</b>
+        </div>
+      </div>
+      <div class="marquee marquee--mustard marquee--reverse">
+        <div class="marquee__track">
+          <span>EL MEJOR PANCHO</span><b>✌</b><span>DE SAN FERNANDO</span><b>✌</b><span>LUN A SÁB 11–22</span><b>✌</b>
+          <span>EL MEJOR PANCHO</span><b>✌</b><span>DE SAN FERNANDO</span><b>✌</b><span>LUN A SÁB 11–22</span><b>✌</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MANIFESTO ============ -->
+    <section class="manifesto" id="nosotros">
+      <div class="section-tag"><span>01</span> Nosotros</div>
+      <p class="manifesto__text" data-words>
+        No inventamos nada. Hacemos el pancho de siempre, pero
+        <span class="hl hl--mustard">bien hecho</span>: pan tostado al momento,
+        salchicha dorada en la plancha y salsas que preparamos
+        <span class="hl hl--red">nosotros</span>. Rápido, sabroso y con
+        la buena onda de <span class="hl hl--green">San Fernando</span>.
+      </p>
+
+      <div class="features">
+        <article class="feature" data-tilt>
+          <div class="feature__icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><path d="M8 40c0-10 10-16 24-16s24 6 24 16-10 10-24 10S8 50 8 40z" fill="#F5B72E" stroke="#121110" stroke-width="3"/><path d="M12 34c4-5 12-8 20-8s16 3 20 8" fill="none" stroke="#121110" stroke-width="3" stroke-linecap="round"/><path d="M20 18c0-4 4-4 4-8M32 18c0-4 4-4 4-8M44 18c0-4 4-4 4-8" stroke="#E23B2E" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
+          </div>
+          <h3>Pan tostadito</h3>
+          <p>Lo calentamos en el momento para que llegue tibio y crocante por fuera.</p>
+          <span class="feature__num">01</span>
+        </article>
+        <article class="feature" data-tilt>
+          <div class="feature__icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><rect x="6" y="24" width="52" height="16" rx="8" fill="#C8553D" stroke="#121110" stroke-width="3"/><path d="M14 32h4M24 32h4M34 32h4M44 32h4" stroke="#121110" stroke-width="3" stroke-linecap="round"/><path d="M10 50h44" stroke="#121110" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <h3>A la plancha</h3>
+          <p>Salchichas doradas al punto justo. Nada de agua tibia: plancha caliente.</p>
+          <span class="feature__num">02</span>
+        </article>
+        <article class="feature" data-tilt>
+          <div class="feature__icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><path d="M24 8h16v8l6 6v32a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V22l6-6z" fill="#E23B2E" stroke="#121110" stroke-width="3" stroke-linejoin="round"/><rect x="18" y="30" width="28" height="14" fill="#F6EFE2" stroke="#121110" stroke-width="3"/><path d="M28 4h8v4h-8z" fill="#121110"/></svg>
+          </div>
+          <h3>Salsas caseras</h3>
+          <p>Las clásicas y las nuestras. Ponele todas las que quieras, sin culpa.</p>
+          <span class="feature__num">03</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ SPECIALS (horizontal) ============ -->
+    <section class="specials" id="especiales" aria-label="Los especiales de la casa">
+      <div class="specials__pin">
+        <div class="specials__head">
+          <div class="section-tag section-tag--light"><span>02</span> Los de la casa</div>
+          <h2 class="title-xl">Los <em>favoritos</em><br />del barrio</h2>
+          <p class="specials__hint">Deslizá →</p>
+        </div>
+        <div class="specials__track" id="specialsTrack">
+          <!-- cards injected by script.js from MENU data (featured items) -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MENU ============ -->
+    <section class="menu" id="menu">
+      <div class="menu__head">
+        <div class="section-tag"><span>03</span> Menú</div>
+        <h2 class="title-xl">La <em>carta</em> completa</h2>
+        <p class="menu__sub">Elegí, combiná y disfrutá. Todos los panchos salen con pan tostado y hasta 3 salsas a elección.</p>
+      </div>
+
+      <div class="menu__tabs" role="tablist" aria-label="Categorías del menú" id="menuTabs"></div>
+
+      <div class="menu__body">
+        <div class="menu__list" id="menuList" role="tabpanel" aria-live="polite"></div>
+        <aside class="menu__preview" aria-hidden="true">
+          <div class="menu__plate">
+            <div class="menu__plate-burst"></div>
+            <div class="menu__plate-dog" id="previewDog"></div>
+          </div>
+          <p class="menu__preview-name" id="previewName">Pasá el mouse por el menú</p>
+        </aside>
+      </div>
+
+      <div class="sauces">
+        <p class="sauces__label">Salsas &amp; toppings</p>
+        <div class="sauces__chips" id="sauceChips"></div>
+      </div>
+    </section>
+
+    <!-- ============ HORARIOS ============ -->
+    <section class="hours" id="horarios">
+      <div class="hours__inner">
+        <div class="hours__left">
+          <div class="section-tag section-tag--light"><span>04</span> Horarios</div>
+          <h2 class="title-xl">Estamos<br /><em>con la plancha</em><br />prendida</h2>
+          <div class="hours__live">
+            <div class="hours__clock" id="clock" aria-label="Hora actual en Argentina">--:--</div>
+            <div class="hours__state">
+              <span class="status-pill status-pill--lg" data-status><i class="status-pill__dot"></i><span data-status-text>Consultando…</span></span>
+              <p class="hours__countdown" id="countdown"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hours__card" data-tilt>
+          <div class="hours__card-top">
+            <span>Horario de atención</span>
+            <span class="hours__tz">Hora Argentina</span>
+          </div>
+          <ul class="hours__list" id="hoursList">
+            <li data-day="1"><span>Lunes</span><i></i><b>11:00 – 22:00</b></li>
+            <li data-day="2"><span>Martes</span><i></i><b>11:00 – 22:00</b></li>
+            <li data-day="3"><span>Miércoles</span><i></i><b>11:00 – 22:00</b></li>
+            <li data-day="4"><span>Jueves</span><i></i><b>11:00 – 22:00</b></li>
+            <li data-day="5"><span>Viernes</span><i></i><b>11:00 – 22:00</b></li>
+            <li data-day="6"><span>Sábado</span><i></i><b>11:00 – 22:00</b></li>
+            <li data-day="0" class="is-closed"><span>Domingo</span><i></i><b>Cerrado</b></li>
+          </ul>
+          <div class="hours__bar" aria-hidden="true">
+            <div class="hours__bar-fill" id="dayBar"></div>
+            <div class="hours__bar-labels"><span>11 hs</span><span>22 hs</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA / CONTACTO ============ -->
+    <section class="cta" id="contacto">
+      <div class="cta__burst" aria-hidden="true"></div>
+      <p class="cta__kicker">¿Se te antojó?</p>
+      <h2 class="cta__title">
+        <span class="cta__line">VENÍ POR</span>
+        <span class="cta__line cta__line--outline">TU PANCHO</span>
+      </h2>
+      <p class="cta__text">Te esperamos en San Fernando de lunes a sábados, de 11 a 22 hs.</p>
+      <div class="cta__buttons">
+        <!-- TODO: reemplazar por el número real: https://wa.me/549XXXXXXXXXX -->
+        <a href="https://wa.me/" target="_blank" rel="noopener" class="btn btn--primary btn--lg magnetic" data-cursor="Chat"><span>Pedí por WhatsApp</span><i class="btn__arrow">→</i></a>
+        <!-- TODO: reemplazar por la dirección exacta del local -->
+        <a href="https://www.google.com/maps/search/?api=1&query=El+Mejor+Pancho+San+Fernando" target="_blank" rel="noopener" class="btn btn--light btn--lg magnetic" data-cursor="Ir"><span>Cómo llegar</span><i class="btn__arrow">↗</i></a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="assets/logo.webp" alt="" width="96" height="96" loading="lazy" />
+        <p>El mejor pancho<br />de San Fernando.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Horarios</h4>
+        <p>Lunes a sábados<br />11:00 a 22:00 hs</p>
+        <p class="muted">Domingos cerrado</p>
+      </div>
+      <div class="footer__col">
+        <h4>Navegá</h4>
+        <a href="#menu">Menú</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#horarios">Horarios</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+      <div class="footer__col">
+        <h4>Seguinos</h4>
+        <!-- TODO: completar con los perfiles reales -->
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram ↗</a>
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook ↗</a>
+      </div>
+    </div>
+    <div class="footer__giant" aria-hidden="true">PANCHO</div>
+    <div class="footer__bottom">
+      <span>© <span id="year">2026</span> El Mejor Pancho de San Fernando</span>
+      <a href="#top" class="footer__up">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
