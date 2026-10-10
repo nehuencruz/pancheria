@@ -19,8 +19,9 @@ Settings → Pages → *Deploy from a branch* → elegí la rama y la carpeta `/
 
 - Preloader animado, cursor personalizado, botones magnéticos y tarjetas con efecto 3D.
 - Scroll suave (Lenis) y animaciones con GSAP + ScrollTrigger.
-- Sección "Los favoritos" con scroll horizontal fijado (en celular se desliza con el dedo).
-- Menú por categorías con pestañas y una ilustración del pancho que cambia según el producto.
+- Sección "Los de la casa" con scroll horizontal fijado (en celular se desliza con el dedo).
+- Historia de la panchería: desde 2004, atendida por Joaquín y Jorge.
+- Menú por pestañas (Panchos, Salsas, Bebidas, Cervezas) con una ilustración que cambia según el producto.
 - Horarios **lunes a sábados de 11 a 22 hs** con estado *Abierto/Cerrado* en vivo (hora Argentina) y cuenta regresiva.
 - Diseño responsive, respeta `prefers-reduced-motion` y funciona aunque no carguen las animaciones.
 
@@ -29,12 +30,13 @@ Settings → Pages → *Deploy from a branch* → elegí la rama y la carpeta `/
 | Qué | Dónde |
 | --- | --- |
 | Productos, descripciones y **precios** | `script.js` → constante `MENU` (arriba de todo) |
-| Salsas y toppings | `script.js` → constante `SAUCES` |
+| Tarjetas de "Los de la casa" | `script.js` → constante `FEATURED` |
+| Chips de salsas | `script.js` → constante `SAUCES` |
 | Horario | `script.js` → `OPEN_MIN` / `CLOSE_MIN` y la tabla en `index.html` (`#hoursList`) |
 | Colores y fuentes | `styles.css` → variables en `:root` |
 | WhatsApp, dirección, redes | `index.html` → buscar `TODO` |
 
-> Los precios y productos del menú son de ejemplo: reemplazalos por los reales.
+> Los productos sin precio (cervezas y Cunnington Tónica) se muestran como "Consultar". Para ponerles precio, agregá `price: 1234` en `MENU`.
 
 ## Estructura
 

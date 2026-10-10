@@ -6,142 +6,209 @@
 
   /* -------------------------------------------------------
      MENÚ — editá acá nombres, descripciones y precios.
-     sauces: colores de las salsas que se dibujan en el pancho
-     toppings: papas | cebolla | queso | panceta | verdeo | jalapeno | muzza
+     price: precio único · priceCash / priceTransfer: efectivo y transferencia
+     sin precio → se muestra "Consultar" (o priceLabel si lo tiene)
+     Panchos: sauces (colores) y toppings: morron | jamon | queso | parmesano
+     Bebidas: kind (bottle | can | cup) y los colores del dibujo
      ------------------------------------------------------- */
-  const S = { ketchup: "#E23B2E", mostaza: "#F5B72E", mayo: "#FFF6DA", golf: "#F29A76", bbq: "#6B2A1A", picante: "#C2171B", cheddar: "#F39C1F", verde: "#6AA84F" };
+  const S = {
+    mayo: "#FFF6DA", mostaza: "#F5B72E", ketchup: "#E23B2E", golf: "#F29A76", parmesano: "#F3E6B5",
+    cheddar: "#F39C1F", picante: "#C2171B", miel: "#E0A526", chili: "#E8552E",
+  };
 
   const MENU = [
     {
       id: "panchos", label: "Panchos",
       items: [
-        { name: "Clásico", desc: "Pan tostado, salchicha a la plancha y hasta 3 salsas a elección.", price: 2500, sauces: [S.ketchup, S.mostaza] },
-        { name: "Con Papas Pay", desc: "El clásico con una lluvia de papas pay crocantes por arriba.", price: 2900, sauces: [S.mayo, S.ketchup], toppings: ["papas"] },
-        { name: "Doble Salchicha", desc: "Para los que vienen con hambre en serio. Dos salchichas, un pan.", price: 3600, sauces: [S.mostaza], double: true },
-        { name: "Cheddar", desc: "Bañado en cheddar fundido y cebolla de verdeo.", price: 3300, sauces: [S.cheddar], toppings: ["queso", "verdeo"] },
+        { name: "Pancho", badge: "El de siempre", desc: "Salchicha alemana sazonada en la panchera con morrón, en pan artesanal. Tiras de morrón sin cargo.", priceCash: 3500, priceTransfer: 4000, sauces: [S.mostaza, S.ketchup], toppings: ["morron"] },
+        { name: "Con Jamón y Queso", desc: "Con jamón y queso de primera calidad, en pan de parmesano.", price: 4500, sauces: [S.mayo], toppings: ["jamon", "queso"], bun: "parmesano" },
       ],
     },
     {
-      id: "especiales", label: "Especiales",
+      id: "salsas", label: "Salsas",
       items: [
-        { name: "El Sanfernandino", badge: "De la casa", featured: true, art: "#F5B72E", desc: "Cheddar, panceta crocante, cebolla caramelizada, papas pay y salsa de la casa.", price: 4800, sauces: [S.cheddar, S.golf], toppings: ["panceta", "papas", "cebolla"] },
-        { name: "Súper Completo", featured: true, art: "#7FA36D", desc: "Ketchup, mostaza, mayo, salsa golf, papas pay y verdeo. Todo, como debe ser.", price: 4200, sauces: [S.ketchup, S.mostaza, S.mayo], toppings: ["papas", "verdeo"] },
-        { name: "El Picante", badge: "Pica", featured: true, art: "#E86A4F", desc: "Jalapeños, salsa picante casera y cheddar para calmar el fuego.", price: 4400, sauces: [S.picante, S.cheddar], toppings: ["jalapeno"] },
-        { name: "Pancho Pizza", featured: true, art: "#B9A3F0", desc: "Muzzarella gratinada, salsa de tomate y orégano. Lo mejor de los dos mundos.", price: 4500, sauces: [S.ketchup], toppings: ["muzza"] },
-        { name: "BBQ Bacon", featured: true, art: "#F2C9A0", desc: "Salsa barbacoa ahumada, panceta y cebolla crispy.", price: 4700, sauces: [S.bbq], toppings: ["panceta", "cebolla"] },
+        { name: "Mayonesa", desc: "Natura", sauces: [S.mayo] },
+        { name: "Mostaza", desc: "Savora", sauces: [S.mostaza] },
+        { name: "Ketchup", desc: "Hellmann's", sauces: [S.ketchup] },
+        { name: "Salsa Golf", desc: "Hellmann's", sauces: [S.golf] },
+        { name: "Parmesano", desc: "Queso parmesano rallado.", sauces: [S.parmesano], toppings: ["parmesano"] },
+        { name: "Cheddar", desc: "Cheddar fundido.", sauces: [S.cheddar] },
+        { name: "Salsa Picante", desc: "Para los que se la bancan.", sauces: [S.picante] },
+        { name: "Mostaza con Miel", desc: "Pampa Gourmet", sauces: [S.miel] },
+        { name: "Sweet Chili", desc: "Salsa agridulce en base a morrón, con un toquecito de picante. Pampa Gourmet.", sauces: [S.chili] },
       ],
     },
     {
-      id: "combos", label: "Combos",
+      id: "bebidas", label: "Bebidas",
       items: [
-        { name: "Combo Solo", desc: "1 pancho clásico + papas fritas + gaseosa 500 ml.", price: 5900, sauces: [S.ketchup, S.mostaza], toppings: ["papas"] },
-        { name: "Combo Dúo", badge: "Más pedido", desc: "2 panchos a elección + papas fritas grandes + 2 gaseosas.", price: 10900, sauces: [S.mayo, S.ketchup], double: true },
-        { name: "Combo Familia", desc: "4 panchos clásicos + 2 papas fritas + gaseosa 1,5 L.", price: 17900, sauces: [S.ketchup, S.mostaza, S.mayo], toppings: ["papas"] },
+        { name: "Coca", price: 6000, kind: "bottle", liquid: "#3B1A12", label: "#E23B2E", cap: "#E23B2E" },
+        { name: "Coca Zero", desc: "1 litro de vidrio.", price: 6000, kind: "bottle", liquid: "#3B1A12", label: "#121110", cap: "#121110" },
+        { name: "Fanta", price: 6000, kind: "bottle", liquid: "#F7931E", label: "#1F5FBF", cap: "#F7931E" },
+        { name: "Sprite", price: 6000, kind: "bottle", liquid: "#D9F2D0", label: "#2E9A4A", cap: "#2E9A4A" },
+        { name: "Línea Coca 1,75 L", price: 6000, kind: "bottle", liquid: "#3B1A12", label: "#E23B2E", cap: "#E23B2E" },
+        { name: "Coquita de vidrio", desc: "237 cm³.", price: 2000, kind: "bottle", small: true, liquid: "#3B1A12", label: "#E23B2E", cap: "#E23B2E" },
+        { name: "Pritty", price: 5000, kind: "bottle", liquid: "#E6F0A8", label: "#2E9A4A", cap: "#F5B72E" },
+        { name: "Cunnington Tónica", kind: "bottle", liquid: "#EAF4E4", label: "#F5B72E", cap: "#F5B72E" },
+        { name: "Agua", desc: "500 cm³.", price: 2500, kind: "bottle", small: true, liquid: "#CFE8F7", label: "#1F5FBF", cap: "#1F5FBF" },
+        { name: "Agua con Gas", desc: "500 cm³.", price: 2500, kind: "bottle", small: true, bubbles: true, liquid: "#CFE8F7", label: "#2E9A4A", cap: "#2E9A4A" },
+        { name: "Agua Saborizada", desc: "500 cm³.", price: 2500, kind: "bottle", small: true, liquid: "#F8C9D4", label: "#C2171B", cap: "#F29A76" },
+        { name: "Café / Cortado", price: 2000, kind: "cup" },
       ],
     },
     {
-      id: "extras", label: "Extras & Bebidas",
+      id: "cervezas", label: "Cervezas",
       items: [
-        { name: "Papas Fritas", desc: "Porción crocante, recién salidas.", price: 2600, sauces: [S.ketchup] },
-        { name: "Extra Cheddar", desc: "Sumale cheddar fundido a cualquier pancho.", price: 900, sauces: [S.cheddar], toppings: ["queso"] },
-        { name: "Extra Panceta", desc: "Panceta crocante en tiras.", price: 1100, sauces: [S.golf], toppings: ["panceta"] },
-        { name: "Gaseosa 500 ml", desc: "Línea Coca-Cola.", price: 1800, sauces: [S.mostaza] },
-        { name: "Agua mineral", desc: "Con o sin gas.", price: 1400, sauces: [S.mayo] },
+        { name: "Imperial Lager", desc: "Lata 473 cm³.", kind: "can", label: "#D9A72B", band: "#121110" },
+        { name: "Imperial IPA", desc: "Lata 473 cm³.", kind: "can", label: "#E58E1A", band: "#121110" },
+        { name: "Schneider", desc: "Lata 473 cm³.", kind: "can", label: "#C8102E", band: "#F5B72E" },
+        { name: "Quilmes", desc: "Lata 473 cm³.", kind: "can", label: "#6FB7E9", band: "#FFFFFF" },
+        { name: "Heineken", desc: "Lata 473 cm³.", kind: "can", label: "#0B7A3E", band: "#C8102E" },
+        { name: "Cerveza Artesanal", desc: "Lata 473 cm³.", kind: "can", label: "#7A4A22", band: "#F5B72E" },
       ],
     },
+  ];
+
+  // Tarjetas grandes de "Los de la casa"
+  const FEATURED = [
+    { ...MENU[0].items[0], art: "#F5B72E" },
+    { ...MENU[0].items[1], art: "#F2B5A8" },
+    { name: "Armalo a tu gusto", badge: "9 salsas", desc: "De la Savora de toda la vida a la Sweet Chili de Pampa Gourmet. Elegí las que quieras.", priceLabel: "9 salsas", art: "#7FA36D", sauces: [S.mostaza, S.ketchup, S.golf], toppings: ["morron"] },
+    { ...MENU[2].items[5], name: "Con una Coquita", desc: "La coquita de vidrio de 237 cm³, la compañera ideal del pancho.", art: "#B9A3F0" },
   ];
 
   const SAUCES = [
-    ["Ketchup", S.ketchup], ["Mostaza", S.mostaza], ["Mayonesa", S.mayo], ["Salsa golf", S.golf],
-    ["Barbacoa", S.bbq], ["Picante casera", S.picante], ["Cheddar", S.cheddar], ["Papas pay", "#F7D36B"],
-    ["Cebolla crispy", "#E8C79A"], ["Verdeo", S.verde], ["Panceta", "#A4442E"], ["Jalapeños", "#3F8F3A"],
+    ["Mayonesa", "Natura", S.mayo], ["Mostaza", "Savora", S.mostaza], ["Ketchup", "Hellmann's", S.ketchup],
+    ["Salsa Golf", "Hellmann's", S.golf], ["Parmesano", "", S.parmesano], ["Cheddar", "", S.cheddar],
+    ["Salsa Picante", "", S.picante], ["Mostaza con Miel", "Pampa Gourmet", S.miel], ["Sweet Chili", "Pampa Gourmet", S.chili],
   ];
 
   const money = (n) => "$" + n.toLocaleString("es-AR");
+  const isSauce = (item) => !item.kind && !item.priceCash && !item.price && !item.priceLabel;
 
-  /* -------------------------------------------------------
-     Ilustración SVG de pancho, generada según los datos
-     ------------------------------------------------------- */
-  function dogSVG(item = {}, uid = Math.random().toString(36).slice(2, 7)) {
-    const sauces = item.sauces && item.sauces.length ? item.sauces : [S.ketchup];
-    const t = item.toppings || [];
-    const ink = "#121110";
-    let out = "";
-
-    // bottom bun (back)
-    out += `<path d="M18 86 C18 60 50 52 160 52 C270 52 302 60 302 86 L302 92 C302 108 280 112 160 112 C40 112 18 108 18 92 Z" fill="#E8A34D" stroke="${ink}" stroke-width="5" stroke-linejoin="round"/>`;
-
-    // sausage(s)
-    const sausage = (y, dx = 0) =>
-      `<rect x="${4 + dx}" y="${y}" width="${312 - dx * 2}" height="34" rx="17" fill="#C8553D" stroke="${ink}" stroke-width="5"/>` +
-      `<path d="M${30 + dx} ${y + 10} H${150}" stroke="#F08A6B" stroke-width="5" stroke-linecap="round" opacity=".7"/>` +
-      `<path d="M${80} ${y + 26} l8 -8 M${130} ${y + 26} l8 -8 M${180} ${y + 26} l8 -8 M${230} ${y + 26} l8 -8" stroke="${ink}" stroke-width="3.5" stroke-linecap="round" opacity=".55"/>`;
-    if (item.double) out += sausage(36, 10);
-    out += sausage(item.double ? 56 : 48);
-
-    // toppings under sauce
-    if (t.includes("queso")) {
-      out += `<path d="M40 ${item.double ? 66 : 58} C60 50 90 56 110 52 C140 46 170 58 200 52 C230 46 260 56 282 54 L284 72 C270 84 262 70 252 82 C240 92 232 74 220 80 C200 92 190 72 170 82 C150 92 140 74 120 82 C100 90 92 74 74 82 C60 88 52 74 40 76 Z" fill="${S.cheddar}" stroke="${ink}" stroke-width="4" stroke-linejoin="round"/>`;
+  function priceHTML(item) {
+    if (item.priceCash) {
+      return `<span class="price-row">${money(item.priceCash)}<small>efectivo</small></span>` +
+        `<span class="price-row price-row--alt">${money(item.priceTransfer)}<small>transferencia</small></span>`;
     }
-    if (t.includes("muzza")) {
-      out += `<path d="M30 56 C60 44 90 54 120 46 C150 40 180 54 210 46 C240 40 270 52 292 50 L290 70 C272 82 258 64 244 78 C226 90 214 66 196 78 C178 90 166 66 148 78 C130 88 118 66 100 78 C82 88 70 66 52 76 C42 80 34 72 30 72 Z" fill="#FFF3D1" stroke="${ink}" stroke-width="4" stroke-linejoin="round"/>` +
-        [70, 130, 190, 250].map((x) => `<circle cx="${x}" cy="56" r="3" fill="#3F8F3A"/>`).join("");
-    }
-    if (t.includes("panceta")) {
-      out += [50, 120, 190, 250].map((x, i) =>
-        `<path d="M${x} ${46 + (i % 2) * 4} q12 -10 24 0 t24 0" fill="none" stroke="#A4442E" stroke-width="9" stroke-linecap="round"/>` +
-        `<path d="M${x} ${46 + (i % 2) * 4} q12 -10 24 0 t24 0" fill="none" stroke="#F2B49C" stroke-width="3" stroke-linecap="round"/>`
-      ).join("");
-    }
-
-    // sauces zigzag
-    sauces.forEach((c, i) => {
-      const y = (item.double ? 48 : 58) + i * 6 - (sauces.length - 1) * 3;
-      let d = `M${28 + i * 8} ${y}`;
-      for (let x = 28 + i * 8, k = 0; x < 286; x += 16, k++) d += ` L${x + 16} ${y + (k % 2 ? -8 : 8)}`;
-      out += `<path d="${d}" fill="none" stroke="${ink}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>`;
-      out += `<path d="${d}" fill="none" stroke="${c}" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-    });
-
-    // toppings over sauce
-    if (t.includes("papas")) {
-      const sticks = [[40, 40, 20], [70, 34, -30], [96, 42, 10], [128, 36, 40], [156, 44, -20], [186, 36, 25], [214, 42, -40], [244, 36, 15], [270, 44, -15]];
-      out += sticks.map(([x, y, r]) => `<rect x="${x}" y="${y}" width="22" height="6" rx="3" fill="#F7D36B" stroke="${ink}" stroke-width="2.5" transform="rotate(${r} ${x + 11} ${y + 3})"/>`).join("");
-    }
-    if (t.includes("cebolla")) {
-      out += [[60, 50], [104, 46], [148, 52], [196, 46], [236, 52], [272, 48]].map(([x, y]) => `<path d="M${x} ${y} q8 -10 16 0" fill="none" stroke="#FFF6DA" stroke-width="4" stroke-linecap="round"/>`).join("");
-    }
-    if (t.includes("verdeo")) {
-      out += [[52, 44], [88, 52], [120, 42], [160, 50], [200, 42], [232, 50], [266, 44]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4" fill="${S.verde}" stroke="${ink}" stroke-width="2"/>`).join("");
-    }
-    if (t.includes("jalapeno")) {
-      out += [70, 130, 190, 250].map((x, i) => `<g transform="translate(${x} ${44 + (i % 2) * 6})"><circle r="9" fill="#3F8F3A" stroke="${ink}" stroke-width="3"/><circle r="4" fill="#B7E08E"/></g>`).join("");
-    }
-
-    // front bun lip
-    out += `<path d="M10 92 C10 82 30 80 60 84 C100 90 220 90 260 84 C290 80 310 82 310 92 C310 128 270 146 160 146 C50 146 10 128 10 92 Z" fill="#F0B25E" stroke="${ink}" stroke-width="5" stroke-linejoin="round"/>`;
-    out += `<path d="M44 112 C80 126 120 130 160 130" fill="none" stroke="#FFD594" stroke-width="6" stroke-linecap="round" opacity=".8"/>`;
-
-    return `<svg viewBox="0 0 320 156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name || "Pancho"}" data-uid="${uid}">${out}</svg>`;
+    if (item.price) return money(item.price);
+    if (item.priceLabel) return `<span class="price-na">${item.priceLabel}</span>`;
+    return isSauce(item) ? "" : `<span class="price-na">Consultar</span>`;
+  }
+  function priceText(item) {
+    if (item.priceCash) return `${money(item.priceCash)} en efectivo`;
+    if (item.price) return money(item.price);
+    return isSauce(item) ? "para tu pancho" : "consultar precio";
   }
 
   /* -------------------------------------------------------
-     Render: especiales, menú, salsas
+     Ilustraciones SVG generadas según los datos
+     ------------------------------------------------------- */
+  const INK = "#121110";
+
+  function dogSVG(item = {}) {
+    const sauces = item.sauces && item.sauces.length ? item.sauces : [S.ketchup];
+    const t = item.toppings || [];
+    const parm = item.bun === "parmesano";
+    const bunBack = parm ? "#E9BE73" : "#E8A34D";
+    const bunFront = parm ? "#F3CF8A" : "#F0B25E";
+    let out = "";
+
+    // pan (atrás)
+    out += `<path d="M18 86 C18 60 50 52 160 52 C270 52 302 60 302 86 L302 92 C302 108 280 112 160 112 C40 112 18 108 18 92 Z" fill="${bunBack}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
+
+    // salchicha alemana
+    out += `<rect x="4" y="48" width="312" height="34" rx="17" fill="#B9533A" stroke="${INK}" stroke-width="5"/>` +
+      `<path d="M30 58 H150" stroke="#E98266" stroke-width="5" stroke-linecap="round" opacity=".7"/>`;
+
+    // jamón y queso
+    if (t.includes("jamon")) {
+      out += `<path d="M24 60 C50 40 80 52 104 44 C130 36 156 52 184 44 C212 36 240 50 268 42 C284 38 296 46 298 56 C282 70 262 58 244 68 C222 80 204 62 182 72 C160 82 140 64 118 74 C96 84 76 66 54 74 C40 78 28 72 24 60 Z" fill="#F4A7A0" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
+    }
+    if (t.includes("queso")) {
+      out += `<path d="M40 56 L92 46 L140 56 L196 44 L246 54 L286 46 L284 66 C270 76 262 64 252 74 C240 84 230 68 218 74 C200 84 188 66 170 74 C150 82 140 66 120 74 C100 82 90 66 72 74 C60 80 50 68 40 70 Z" fill="#FFE08A" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
+    }
+
+    // salsas en zigzag
+    sauces.forEach((c, i) => {
+      const y = 58 + i * 6 - (sauces.length - 1) * 3;
+      let d = `M${28 + i * 8} ${y}`;
+      for (let x = 28 + i * 8, k = 0; x < 286; x += 16, k++) d += ` L${x + 16} ${y + (k % 2 ? -8 : 8)}`;
+      out += `<path d="${d}" fill="none" stroke="${INK}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>`;
+      out += `<path d="${d}" fill="none" stroke="${c}" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    });
+
+    // tiras de morrón (arriba de las salsas)
+    if (t.includes("morron")) {
+      out += [[30, 44, 56], [104, 40, 50], [168, 46, 56], [236, 40, 52]].map(([x, y, w]) =>
+        `<path d="M${x} ${y} q${w / 2} -12 ${w} 0" fill="none" stroke="${INK}" stroke-width="12" stroke-linecap="round"/>` +
+        `<path d="M${x} ${y} q${w / 2} -12 ${w} 0" fill="none" stroke="#E0342A" stroke-width="7" stroke-linecap="round"/>` +
+        `<path d="M${x + w * 0.25} ${y - 5} q${w / 4} -5 ${w / 2} 0" fill="none" stroke="#FF8A7A" stroke-width="2.5" stroke-linecap="round"/>`
+      ).join("");
+    }
+
+    if (t.includes("parmesano")) {
+      out += [[46, 44], [72, 52], [100, 42], [128, 50], [156, 44], [184, 52], [212, 42], [240, 50], [268, 44]].map(([x, y]) =>
+        `<rect x="${x}" y="${y}" width="7" height="7" rx="2" fill="#FFF6DA" stroke="${INK}" stroke-width="2" transform="rotate(${x % 40} ${x + 3} ${y + 3})"/>`).join("");
+    }
+
+    // pan (adelante)
+    out += `<path d="M10 92 C10 82 30 80 60 84 C100 90 220 90 260 84 C290 80 310 82 310 92 C310 128 270 146 160 146 C50 146 10 128 10 92 Z" fill="${bunFront}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
+    out += `<path d="M44 112 C80 126 120 130 160 130" fill="none" stroke="#FFD594" stroke-width="6" stroke-linecap="round" opacity=".8"/>`;
+    if (parm) {
+      out += [[70, 104], [110, 118], [150, 108], [190, 120], [230, 106], [260, 118], [90, 128], [210, 132]].map(([x, y]) =>
+        `<circle cx="${x}" cy="${y}" r="3.2" fill="#FFF6DA" stroke="${INK}" stroke-width="1.5"/>`).join("");
+    }
+
+    return `<svg viewBox="0 0 320 156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name || "Pancho"}">${out}</svg>`;
+  }
+
+  function drinkSVG(item) {
+    let out = "";
+    if (item.kind === "can") {
+      out += `<path d="M48 34 Q48 22 60 20 H100 Q112 22 112 34 V206 Q112 218 100 220 H60 Q48 218 48 206 Z" fill="${item.label}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
+      out += `<rect x="48" y="96" width="64" height="44" fill="${item.band}" stroke="${INK}" stroke-width="4"/>`;
+      out += `<path d="M54 20 H106" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><ellipse cx="80" cy="16" rx="22" ry="5" fill="#D8D8D8" stroke="${INK}" stroke-width="4"/>`;
+      out += `<path d="M62 40 V84 M62 152 V196" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".45"/>`;
+      out += `<circle cx="80" cy="118" r="11" fill="${item.label}" stroke="${INK}" stroke-width="3"/>`;
+    } else if (item.kind === "cup") {
+      out += `<path d="M58 80 q-8 -16 4 -30 q10 -12 2 -26 M84 80 q-8 -16 4 -30 q10 -12 2 -26" fill="none" stroke="#F6EFE2" stroke-width="5" stroke-linecap="round" opacity=".9"/>`;
+      out += `<ellipse cx="80" cy="196" rx="66" ry="14" fill="#F6EFE2" stroke="${INK}" stroke-width="5"/>`;
+      out += `<path d="M120 116 h10 a22 22 0 0 1 0 44 h-14" fill="none" stroke="${INK}" stroke-width="10"/><path d="M120 116 h10 a22 22 0 0 1 0 44 h-14" fill="none" stroke="#F6EFE2" stroke-width="4"/>`;
+      out += `<path d="M30 96 H130 V150 Q130 190 80 190 Q30 190 30 150 Z" fill="#F6EFE2" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
+      out += `<ellipse cx="80" cy="98" rx="48" ry="9" fill="#7A4A22" stroke="${INK}" stroke-width="4"/><ellipse cx="74" cy="97" rx="18" ry="3.5" fill="#C9935F"/>`;
+      out += `<path d="M44 120 V150" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".7"/>`;
+    } else {
+      const sm = item.small;
+      const top = sm ? 46 : 14, neck = sm ? 30 : 40;
+      const body = `M66 ${top} H94 V${top + neck} C94 ${top + neck + 16} 118 ${top + neck + 22} 118 ${top + neck + 54} V214 Q118 226 106 226 H54 Q42 226 42 214 V${top + neck + 54} C42 ${top + neck + 22} 66 ${top + neck + 16} 66 ${top + neck} Z`;
+      out += `<path d="${body}" fill="${item.liquid}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
+      out += `<rect x="63" y="${top - 12}" width="34" height="16" rx="4" fill="${item.cap}" stroke="${INK}" stroke-width="4"/>`;
+      out += `<rect x="42" y="${sm ? 150 : 140}" width="76" height="${sm ? 40 : 46}" fill="${item.label}" stroke="${INK}" stroke-width="4"/>`;
+      out += `<path d="M52 ${sm ? 170 : 163} q14 -10 28 0 t28 0" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".85"/>`;
+      out += `<path d="M54 ${top + neck + 60} V${sm ? 140 : 130}" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".55"/>`;
+      if (item.bubbles) out += [[80, 120], [96, 104], [70, 96], [90, 205], [64, 210]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>`).join("");
+    }
+    return `<svg class="is-tall" viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name}">${out}</svg>`;
+  }
+
+  const artSVG = (item) => (item.kind ? drinkSVG(item) : dogSVG(item));
+
+  /* -------------------------------------------------------
+     Render: los de la casa, menú, salsas
      ------------------------------------------------------- */
   const track = document.getElementById("specialsTrack");
-  const featured = MENU.flatMap((c) => c.items).filter((i) => i.featured);
-  track.innerHTML = featured.map((item, i) => `
+  track.innerHTML = FEATURED.map((item, i) => `
     <article class="special">
       <div class="special__art" style="--art-bg:${item.art}">
         ${item.badge ? `<span class="special__tag">${item.badge}</span>` : ""}
-        ${dogSVG(item)}
+        ${artSVG(item)}
       </div>
       <div class="special__body">
         <h3 class="special__name">${item.name}</h3>
         <p class="special__desc">${item.desc}</p>
         <div class="special__foot">
-          <span class="special__price">${money(item.price)}</span>
-          <span class="special__num">${String(i + 1).padStart(2, "0")} / ${String(featured.length).padStart(2, "0")}</span>
+          <span class="special__price">${priceHTML(item)}</span>
+          <span class="special__num">${String(i + 1).padStart(2, "0")} / ${String(FEATURED.length).padStart(2, "0")}</span>
         </div>
       </div>
     </article>`).join("");
@@ -156,22 +223,23 @@
   ).join("");
 
   function setPreview(item) {
-    previewDog.innerHTML = dogSVG(item);
+    previewDog.innerHTML = artSVG(item);
+    previewDog.classList.toggle("is-tall", !!item.kind);
     previewDog.classList.remove("is-swap");
     void previewDog.offsetWidth;
     previewDog.classList.add("is-swap");
-    previewName.textContent = `${item.name} · ${money(item.price)}`;
+    previewName.textContent = `${item.name} · ${priceText(item)}`;
   }
 
   function renderCategory(id) {
     const cat = MENU.find((c) => c.id === id);
     list.setAttribute("aria-labelledby", `tab-${id}`);
     list.innerHTML = cat.items.map((item, i) => `
-      <article class="menu-item is-enter" style="animation-delay:${i * 70}ms" data-i="${i}" data-cursor="Mmm" tabindex="0">
+      <article class="menu-item is-enter" style="animation-delay:${i * 50}ms" data-i="${i}" data-cursor="Mmm" tabindex="0">
         <span class="menu-item__num">${String(i + 1).padStart(2, "0")}</span>
         <h3 class="menu-item__name">${item.name}${item.badge ? `<span class="menu-item__badge">${item.badge}</span>` : ""}</h3>
-        <span class="menu-item__price">${money(item.price)}</span>
-        <p class="menu-item__desc">${item.desc}</p>
+        <span class="menu-item__price">${priceHTML(item)}</span>
+        ${item.desc ? `<p class="menu-item__desc">${item.desc}</p>` : ""}
       </article>`).join("");
     list.querySelectorAll(".menu-item").forEach((el) => {
       const item = cat.items[+el.dataset.i];
@@ -197,7 +265,11 @@
     next.focus(); next.click();
   });
 
-  document.getElementById("sauceChips").innerHTML = SAUCES.map(([n, c]) => `<span class="chip" style="--c:${c}"><i></i>${n}</span>`).join("");
+  document.getElementById("sauceChips").innerHTML = SAUCES.map(([n, b, c]) =>
+    `<span class="chip" style="--c:${c}"><i></i>${n}${b ? `<small>${b}</small>` : ""}</span>`).join("");
+
+  const yearsEl = document.getElementById("years");
+  if (yearsEl) yearsEl.textContent = new Date().getFullYear() - 2004;
 
   /* -------------------------------------------------------
      Horarios: estado en vivo (hora Argentina)
@@ -415,7 +487,7 @@
 
   // hero initial states
   gsap.set(".hero__title .ch", { yPercent: 110, rotate: 8 });
-  gsap.set(".hero__badge", { scale: 0, rotate: -200 });
+  gsap.set(".hero__badge", { scale: 0, rotate: -15 });
   gsap.set(".sticker", { scale: 0 });
   gsap.set(".hero__script", { opacity: 0, y: 20 });
 
@@ -455,7 +527,6 @@
 
   // ---- hero scroll out ----
   gsap.to(".hero__title", { yPercent: -30, scale: 0.92, opacity: 0.2, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
-  gsap.to(".hero__badge", { yPercent: 40, rotate: 25, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
 
   // ---- marquees reaccionan al scroll ----
   gsap.fromTo(".marquee--red", { xPercent: 4 }, { xPercent: -6, ease: "none", scrollTrigger: { trigger: ".marquees", start: "top bottom", end: "bottom top", scrub: true } });
@@ -477,6 +548,18 @@
   gsap.utils.toArray(".title-xl").forEach((el) => {
     gsap.from(el, { y: 60, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
   });
+
+  // ---- historia: contador hasta 2004 ----
+  const yearObj = { v: 1990 };
+  const yearNum = document.querySelector(".history__num");
+  yearNum.textContent = "1990";
+  gsap.to(yearObj, {
+    v: 2004, duration: 1.6, ease: "power3.out",
+    onUpdate: () => (yearNum.textContent = Math.round(yearObj.v)),
+    scrollTrigger: { trigger: ".history", start: "top 80%" },
+  });
+  gsap.from(".history", { y: 80, opacity: 0, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: ".history", start: "top 88%" } });
+  gsap.from(".person", { scale: 0, duration: 0.7, stagger: 0.12, ease: "back.out(2.5)", scrollTrigger: { trigger: ".history__people", start: "top 92%" } });
 
   // ---- especiales: scroll horizontal pinneado (desktop) ----
   const mm = gsap.matchMedia();
