@@ -8,8 +8,8 @@
      MENÚ — editá acá nombres, descripciones y precios.
      price: precio único · priceCash / priceTransfer: efectivo y transferencia
      sin precio → se muestra "Consultar" (o priceLabel si lo tiene)
-     Panchos: sauces (colores) y toppings: morron | jamon | queso | parmesano
-     Bebidas: kind (bottle | can | cup) y los colores del dibujo
+     Panchos: sauces (colores) y toppings: morron | parmesano
+     Tostadas: kind "toast" · Bebidas: kind (bottle | can | cup) y los colores del dibujo
      ------------------------------------------------------- */
   const S = {
     mayo: "#FFF6DA", mostaza: "#F5B72E", ketchup: "#E23B2E", golf: "#F29A76", parmesano: "#F3E6B5",
@@ -21,7 +21,12 @@
       id: "panchos", label: "Panchos",
       items: [
         { name: "Pancho", badge: "El de siempre", desc: "Salchicha alemana sazonada en la panchera con morrón, en pan artesanal. Tiras de morrón sin cargo.", priceCash: 3500, priceTransfer: 4000, sauces: [S.mostaza, S.ketchup], toppings: ["morron"] },
-        { name: "Con Jamón y Queso", desc: "Con jamón y queso de primera calidad, en pan de parmesano.", price: 4500, sauces: [S.mayo], toppings: ["jamon", "queso"], bun: "parmesano" },
+      ],
+    },
+    {
+      id: "tostadas", label: "Tostadas",
+      items: [
+        { name: "Tostada de Jamón y Queso", desc: "Con jamón y queso de primera calidad, en pan de parmesano.", price: 4500, kind: "toast" },
       ],
     },
     {
@@ -71,9 +76,9 @@
   // Tarjetas grandes de "Los de la casa"
   const FEATURED = [
     { ...MENU[0].items[0], art: "#F5B72E" },
-    { ...MENU[0].items[1], art: "#F2B5A8" },
+    { ...MENU[1].items[0], art: "#F2B5A8" },
     { name: "Armalo a tu gusto", badge: "9 salsas", desc: "De la Savora de toda la vida a la Sweet Chili de Pampa Gourmet. Elegí las que quieras.", priceLabel: "9 salsas", art: "#7FA36D", sauces: [S.mostaza, S.ketchup, S.golf], toppings: ["morron"] },
-    { ...MENU[2].items[5], name: "Con una Coquita", desc: "La coquita de vidrio de 237 cm³, la compañera ideal del pancho.", art: "#B9A3F0" },
+    { ...MENU[3].items[5], name: "Con una Coquita", desc: "La coquita de vidrio de 237 cm³, la compañera ideal del pancho.", art: "#B9A3F0" },
   ];
 
   const SAUCES = [
@@ -119,14 +124,6 @@
     // salchicha alemana
     out += `<rect x="4" y="48" width="312" height="34" rx="17" fill="#B9533A" stroke="${INK}" stroke-width="5"/>` +
       `<path d="M30 58 H150" stroke="#E98266" stroke-width="5" stroke-linecap="round" opacity=".7"/>`;
-
-    // jamón y queso
-    if (t.includes("jamon")) {
-      out += `<path d="M24 60 C50 40 80 52 104 44 C130 36 156 52 184 44 C212 36 240 50 268 42 C284 38 296 46 298 56 C282 70 262 58 244 68 C222 80 204 62 182 72 C160 82 140 64 118 74 C96 84 76 66 54 74 C40 78 28 72 24 60 Z" fill="#F4A7A0" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
-    }
-    if (t.includes("queso")) {
-      out += `<path d="M40 56 L92 46 L140 56 L196 44 L246 54 L286 46 L284 66 C270 76 262 64 252 74 C240 84 230 68 218 74 C200 84 188 66 170 74 C150 82 140 66 120 74 C100 82 90 66 72 74 C60 80 50 68 40 70 Z" fill="#FFE08A" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
-    }
 
     // salsas en zigzag
     sauces.forEach((c, i) => {
@@ -191,7 +188,24 @@
     return `<svg class="is-tall" viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name}">${out}</svg>`;
   }
 
-  const artSVG = (item) => (item.kind ? drinkSVG(item) : dogSVG(item));
+  function toastSVG(item) {
+    // tostado de jamón y queso en pan de parmesano: dos mitades vistas de costado
+    const half = (x, y, w) => {
+      let g = "";
+      g += `<rect x="${x}" y="${y + 50}" width="${w}" height="26" rx="10" fill="#E9B464" stroke="${INK}" stroke-width="5"/>`;
+      g += `<path d="M${x + 4} ${y + 42} H${x + w - 4} V${y + 54} H${x + 4} Z" fill="#F4A7A0" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
+      g += `<path d="M${x + 2} ${y + 34} H${x + w - 2} V${y + 44} C${x + w - 14} ${y + 44} ${x + w - 16} ${y + 58} ${x + w - 26} ${y + 58} C${x + w - 36} ${y + 58} ${x + w - 36} ${y + 44} ${x + w * 0.55} ${y + 44} C${x + w * 0.45} ${y + 44} ${x + w * 0.42} ${y + 62} ${x + w * 0.32} ${y + 62} C${x + w * 0.22} ${y + 62} ${x + w * 0.24} ${y + 44} ${x + 2} ${y + 44} Z" fill="#FFD45E" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
+      g += `<rect x="${x}" y="${y}" width="${w}" height="38" rx="12" fill="#EDBE6E" stroke="${INK}" stroke-width="5"/>`;
+      for (let gx = x + 18; gx < x + w - 14; gx += 26) g += `<path d="M${gx} ${y + 30} L${gx + 14} ${y + 8}" stroke="#8A4B1E" stroke-width="5" stroke-linecap="round" opacity=".75"/>`;
+      g += [0.2, 0.45, 0.7, 0.88].map((k, i) => `<circle cx="${x + w * k}" cy="${y + (i % 2 ? 12 : 26)}" r="3" fill="#FFF6DA" stroke="${INK}" stroke-width="1.5"/>`).join("");
+      return g;
+    };
+    const out = half(22, 20, 170) + half(128, 62, 172);
+    return `<svg viewBox="0 0 320 156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name}">${out}</svg>`;
+  }
+
+  const isTall = (item) => !!item.kind && item.kind !== "toast";
+  const artSVG = (item) => (item.kind === "toast" ? toastSVG(item) : item.kind ? drinkSVG(item) : dogSVG(item));
 
   /* -------------------------------------------------------
      Render: los de la casa, menú, salsas
@@ -224,7 +238,7 @@
 
   function setPreview(item) {
     previewDog.innerHTML = artSVG(item);
-    previewDog.classList.toggle("is-tall", !!item.kind);
+    previewDog.classList.toggle("is-tall", isTall(item));
     previewDog.classList.remove("is-swap");
     void previewDog.offsetWidth;
     previewDog.classList.add("is-swap");
