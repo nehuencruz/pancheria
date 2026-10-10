@@ -662,10 +662,10 @@ em { font-style: normal; }
   .hero__scroll { display: none; }
   .hero__eyebrow { letter-spacing: 0.14em; font-size: 0.7rem; }
   .hero__eyebrow .star { margin: 0 4px; }
-  .sticker--1 { top: auto; bottom: 17%; left: 2%; transform: rotate(-14deg) scale(0.72); }
+  .sticker--1 { top: 38%; bottom: auto; left: 2%; transform: rotate(-14deg) scale(0.72); }
   .hero__badge { margin-top: -14px; }
   .sticker--2 { top: 30%; right: 4%; }
-  .sticker--3 { bottom: 8%; }
+  .sticker--3 { display: none; }
   .sticker--4 { display: none; }
   .hero { padding-top: 110px; }
 
