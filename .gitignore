@@ -1,0 +1,10 @@
+# Configuración generada y variables locales (no se suben)
+config.js
+.env
+.env.*
+!.env.example
+
+# Publicación / dependencias
+_site/
+node_modules/
+.DS_Store

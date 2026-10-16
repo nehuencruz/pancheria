@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Eventos · El Mejor Pancho</title>
+  <meta name="description" content="Fotos y novedades de los eventos de El Mejor Pancho de San Fernando. Desde 2004." />
+  <meta name="theme-color" content="#121110" />
+  <meta property="og:title" content="Eventos · El Mejor Pancho de San Fernando" />
+  <meta property="og:image" content="../assets/logo.png" />
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  <link rel="apple-touch-icon" href="../assets/favicon.png" />
+  <link rel="preload" href="../assets/fonts/bowlby-one.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../assets/css/eventos.css" />
+</head>
+<body class="page-eventos">
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><div class="cursor__dot"></div><div class="cursor__ring"><span class="cursor__label"></span></div></div>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <a href="../" class="nav__brand" aria-label="Volver al inicio">
+      <img src="../assets/logo.webp" alt="" width="44" height="44" />
+      <span>El Mejor<br />Pancho</span>
+    </a>
+    <nav class="nav__links" aria-label="Principal">
+      <a href="../#menu" data-cursor="Ver">Menú</a>
+      <a href="../#nosotros" data-cursor="Ver">Nosotros</a>
+      <a href="../#horarios" data-cursor="Ver">Horarios</a>
+      <a href="./" class="is-active" aria-current="page" data-cursor="Ver">Eventos</a>
+      <a href="../#contacto" data-cursor="Ver">Contacto</a>
+    </nav>
+    <div class="nav__right">
+      <a href="../#menu" class="btn btn--primary btn--sm magnetic" data-cursor="Ver"><span>Ver el menú</span></a>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav>
+      <a href="../#menu"><small>01</small>Menú</a>
+      <a href="../#nosotros"><small>02</small>Nosotros</a>
+      <a href="../#horarios"><small>03</small>Horarios</a>
+      <a href="./" aria-current="page"><small>04</small>Eventos</a>
+      <a href="../#contacto"><small>05</small>Contacto</a>
+    </nav>
+    <p class="mobile-menu__foot">Lun a Sáb · 11 a 22 hs · San Fernando</p>
+  </div>
+
+  <main id="top">
+    <!-- ============ HERO ============ -->
+    <section class="ev-hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__glow hero__glow--red"></div>
+        <div class="hero__glow hero__glow--mustard"></div>
+        <div class="hero__grid"></div>
+      </div>
+      <div class="hero__eyebrow ev-reveal"><span class="star">★</span> El Mejor Pancho · San Fernando <span class="star">★</span></div>
+      <h1 class="ev-hero__title" aria-label="Eventos"><span class="ev-hero__line"><span class="split">EVENTOS</span></span></h1>
+      <div class="ev-hero__badge" aria-hidden="true">
+        <svg class="ev-hero__burst" viewBox="0 0 400 400"><polygon id="burstShape" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" points="" /></svg>
+        <img src="../assets/logo.webp" alt="" width="720" height="720" />
+      </div>
+      <p class="ev-hero__script ev-reveal">lo que pasa en la panchería</p>
+      <p class="ev-hero__lead ev-reveal">Fotos y momentos compartidos con la gente del barrio. Desde 2004, siempre con la panchera prendida.</p>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <section class="marquees" aria-hidden="true">
+      <div class="marquee marquee--red">
+        <div class="marquee__track">
+          <span>EVENTOS</span><b>★</b><span>FOTOS</span><b>★</b><span>BUENA ONDA</span><b>★</b><span>SAN FERNANDO</span><b>★</b>
+          <span>EVENTOS</span><b>★</b><span>FOTOS</span><b>★</b><span>BUENA ONDA</span><b>★</b><span>SAN FERNANDO</span><b>★</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LISTA DE EVENTOS ============ -->
+    <section class="ev-list" id="eventos" aria-live="polite">
+      <div class="section-tag"><span>★</span> Galería</div>
+      <div id="eventsRoot">
+        <p class="ev-loading">Cargando eventos…</p>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="cta">
+      <div class="cta__burst" aria-hidden="true"></div>
+      <p class="cta__kicker">¿Se te antojó?</p>
+      <h2 class="cta__title">
+        <span class="cta__line">VENÍ POR</span>
+        <span class="cta__line cta__line--outline">TU PANCHO</span>
+      </h2>
+      <p class="cta__text">Te esperamos en San Fernando de lunes a sábados, de 11 a 22 hs.</p>
+      <div class="cta__buttons">
+        <a href="../#menu" class="btn btn--primary btn--lg magnetic" data-cursor="Ver"><span>Ver el menú</span><i class="btn__arrow">→</i></a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="../assets/logo.webp" alt="" width="96" height="96" loading="lazy" />
+        <p>El mejor pancho<br />de San Fernando.</p>
+        <p class="footer__since">Desde 2004 · Joaquín y Jorge</p>
+      </div>
+      <div class="footer__col">
+        <h4>Horarios</h4>
+        <p>Lunes a sábados<br />11:00 a 22:00 hs</p>
+        <p class="muted">Domingos cerrado</p>
+      </div>
+      <div class="footer__col">
+        <h4>Navegá</h4>
+        <a href="../#menu">Menú</a>
+        <a href="../#nosotros">Nosotros</a>
+        <a href="../#horarios">Horarios</a>
+        <a href="./">Eventos</a>
+        <a href="../#contacto">Contacto</a>
+      </div>
+      <div class="footer__col">
+        <h4>Seguinos</h4>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram ↗</a>
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook ↗</a>
+      </div>
+    </div>
+    <div class="footer__giant" aria-hidden="true">EVENTOS</div>
+    <div class="footer__bottom">
+      <span>© <span id="year">2026</span> El Mejor Pancho de San Fernando</span>
+      <a href="#top" class="footer__up">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <!-- Visor de fotos -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto del evento" hidden>
+    <button class="lightbox__close" id="lbClose" aria-label="Cerrar">✕</button>
+    <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Foto anterior">←</button>
+    <figure class="lightbox__figure">
+      <img id="lbImg" alt="" />
+      <figcaption id="lbCaption"></figcaption>
+    </figure>
+    <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Foto siguiente">→</button>
+    <p class="lightbox__count" id="lbCount"></p>
+  </div>
+
+  <script src="../config.js" defer></script>
+  <script src="../assets/js/data.js" defer></script>
+  <script src="../assets/vendor/gsap.min.js" defer></script>
+  <script src="../assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="../assets/vendor/lenis.min.js" defer></script>
+  <script src="../assets/js/eventos.js" defer></script>
+</body>
+</html>

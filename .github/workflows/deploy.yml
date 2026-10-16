@@ -1,0 +1,47 @@
+# Publica la web en GitHub Pages generando config.js con las
+# variables del repositorio (Settings → Secrets and variables →
+# Actions → pestaña "Variables"): SUPABASE_URL y SUPABASE_ANON_KEY.
+name: Publicar en GitHub Pages
+
+on:
+  push:
+    branches: [main, claude/premium-landing-page-qmd2ox]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Armar el sitio
+        run: |
+          mkdir -p _site
+          cp -R index.html styles.css script.js assets admin eventos _site/
+          node scripts/make-config.mjs _site/config.js
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

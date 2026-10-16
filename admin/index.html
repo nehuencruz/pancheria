@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Panel · El Mejor Pancho</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#121110" />
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <!-- ============ SIN CONFIGURACIÓN ============ -->
+  <main class="center-view" id="viewConfig" hidden>
+    <div class="card card--narrow">
+      <img src="../assets/logo.webp" alt="" class="card__logo" width="88" height="88" />
+      <h1>Falta configurar Supabase</h1>
+      <p id="configMsg">Este panel necesita el archivo <code>config.js</code> con la URL del proyecto y la clave pública de Supabase. Se genera automáticamente al publicar la página (ver README).</p>
+    </div>
+  </main>
+
+  <!-- ============ LOGIN ============ -->
+  <main class="center-view" id="viewLogin" hidden>
+    <form class="card card--narrow" id="loginForm" novalidate>
+      <img src="../assets/logo.webp" alt="" class="card__logo" width="88" height="88" />
+      <h1>Panel del dueño</h1>
+      <p class="muted">Ingresá con tu email y contraseña.</p>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="username" required inputmode="email" />
+      </label>
+      <label class="field">
+        <span>Contraseña</span>
+        <span class="pass">
+          <input type="password" name="password" autocomplete="current-password" required minlength="6" />
+          <button type="button" class="pass__toggle" id="passToggle" aria-label="Mostrar contraseña">Ver</button>
+        </span>
+      </label>
+      <p class="form-error" id="loginError" role="alert" hidden></p>
+      <button class="btn btn--primary btn--block" type="submit" id="loginBtn">Entrar</button>
+      <a class="back-link" href="../">← Volver a la web</a>
+    </form>
+  </main>
+
+  <!-- ============ SIN PERMISO ============ -->
+  <main class="center-view" id="viewDenied" hidden>
+    <div class="card card--narrow">
+      <img src="../assets/logo.webp" alt="" class="card__logo" width="88" height="88" />
+      <h1>Sin permiso</h1>
+      <p>Esta cuenta no tiene acceso al panel. Si sos el dueño, revisá que tu usuario esté cargado como administrador (ver README).</p>
+      <button class="btn btn--primary btn--block" type="button" data-logout>Salir</button>
+    </div>
+  </main>
+
+  <!-- ============ PANEL ============ -->
+  <div id="viewApp" hidden>
+    <header class="topbar">
+      <a class="topbar__brand" href="../" target="_blank" rel="noopener" title="Ver la web">
+        <img src="../assets/logo.webp" alt="" width="40" height="40" />
+        <span>Panel<small>El Mejor Pancho</small></span>
+      </a>
+      <div class="topbar__right">
+        <span class="topbar__user" id="userEmail"></span>
+        <a class="btn btn--ghost btn--sm" href="../" target="_blank" rel="noopener">Ver la web ↗</a>
+        <button class="btn btn--light btn--sm" type="button" data-logout>Salir</button>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="panelProducts" id="tabProducts" data-tab="products">Productos</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panelEvents" id="tabEvents" data-tab="events">Eventos</button>
+    </nav>
+
+    <!-- Productos -->
+    <section class="panel" id="panelProducts" role="tabpanel" aria-labelledby="tabProducts">
+      <div class="toolbar">
+        <label class="field field--inline">
+          <span class="sr-only">Categoría</span>
+          <select id="filterCategory"><option value="all">Todas las categorías</option></select>
+        </label>
+        <label class="field field--inline field--grow">
+          <span class="sr-only">Buscar</span>
+          <input type="search" id="searchProducts" placeholder="Buscar producto…" />
+        </label>
+        <button class="btn btn--primary" type="button" id="addProduct">+ Agregar producto</button>
+      </div>
+      <div id="productsList" class="list" aria-live="polite"><p class="muted">Cargando…</p></div>
+    </section>
+
+    <!-- Eventos -->
+    <section class="panel" id="panelEvents" role="tabpanel" aria-labelledby="tabEvents" hidden>
+      <div class="toolbar">
+        <p class="muted toolbar__hint">Los eventos visibles aparecen en la página <a href="../eventos/" target="_blank" rel="noopener">Eventos ↗</a></p>
+        <button class="btn btn--primary" type="button" id="addEvent">+ Nuevo evento</button>
+      </div>
+      <div id="eventsList" class="list" aria-live="polite"><p class="muted">Cargando…</p></div>
+    </section>
+  </div>
+
+  <!-- ============ EDITOR DE PRODUCTO ============ -->
+  <dialog class="modal" id="productDialog" aria-labelledby="productDialogTitle">
+    <form method="dialog" id="productForm" novalidate>
+      <header class="modal__head">
+        <h2 id="productDialogTitle">Producto</h2>
+        <button type="button" class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </header>
+      <div class="modal__body">
+        <label class="field">
+          <span>Nombre *</span>
+          <input name="name" required maxlength="80" />
+        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Categoría</span>
+            <select name="category" required></select>
+          </label>
+          <label class="field">
+            <span>Etiqueta <small>(opcional, ej: "El de siempre")</small></span>
+            <input name="badge" maxlength="30" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Descripción <small class="counter" data-counter="description">0/400</small></span>
+          <textarea name="description" rows="3" maxlength="400"></textarea>
+        </label>
+
+        <fieldset class="field">
+          <legend>Precio</legend>
+          <div class="segmented">
+            <label><input type="radio" name="priceMode" value="single" checked /><span>Precio único</span></label>
+            <label><input type="radio" name="priceMode" value="split" /><span>Efectivo / transferencia</span></label>
+            <label><input type="radio" name="priceMode" value="none" /><span>Sin precio</span></label>
+          </div>
+          <div class="grid-2 price-single">
+            <label class="field"><span>Precio ($)</span><input name="price" type="number" min="0" step="1" inputmode="numeric" /></label>
+          </div>
+          <div class="grid-2 price-split" hidden>
+            <label class="field"><span>Efectivo ($)</span><input name="price_cash" type="number" min="0" step="1" inputmode="numeric" /></label>
+            <label class="field"><span>Transferencia ($)</span><input name="price_transfer" type="number" min="0" step="1" inputmode="numeric" /></label>
+          </div>
+          <p class="muted small price-none" hidden>En la web se muestra "Consultar" (en Salsas no se muestra nada).</p>
+        </fieldset>
+
+        <div class="field">
+          <span class="field__label">Foto</span>
+          <div class="photo-edit">
+            <div class="photo-edit__preview" id="productPhotoPreview"></div>
+            <div class="photo-edit__actions">
+              <label class="btn btn--light btn--sm file-btn">
+                Elegir foto
+                <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" />
+              </label>
+              <button type="button" class="btn btn--ghost-dark btn--sm" id="removeProductPhoto">Quitar foto</button>
+              <p class="muted small">JPG, PNG o WEBP. Se achica automáticamente. Sin foto, se usa el dibujo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <label class="field">
+            <span>Orden <small>(menor = primero)</small></span>
+            <input name="sort_order" type="number" step="1" inputmode="numeric" />
+          </label>
+          <div class="checks">
+            <label class="check"><input type="checkbox" name="active" /><span>Visible en la web</span></label>
+            <label class="check"><input type="checkbox" name="featured" /><span>Destacado en "Los de la casa"</span></label>
+          </div>
+        </div>
+        <p class="form-error" id="productError" role="alert" hidden></p>
+      </div>
+      <footer class="modal__foot">
+        <button type="button" class="btn btn--ghost-dark" data-close>Cancelar</button>
+        <button type="submit" class="btn btn--primary" id="productSave">Guardar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ============ EDITOR DE EVENTO ============ -->
+  <dialog class="modal modal--wide" id="eventDialog" aria-labelledby="eventDialogTitle">
+    <form method="dialog" id="eventForm" novalidate>
+      <header class="modal__head">
+        <h2 id="eventDialogTitle">Evento</h2>
+        <button type="button" class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </header>
+      <div class="modal__body">
+        <label class="field">
+          <span>Título *</span>
+          <input name="title" required maxlength="120" />
+        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Fecha <small>(opcional)</small></span>
+            <input name="event_date" type="date" />
+          </label>
+          <label class="field">
+            <span>Orden <small>(menor = primero, si no hay fecha)</small></span>
+            <input name="sort_order" type="number" step="1" inputmode="numeric" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Descripción <small class="counter" data-counter="description">0/2000</small></span>
+          <textarea name="description" rows="4" maxlength="2000"></textarea>
+        </label>
+        <label class="check"><input type="checkbox" name="active" /><span>Visible en la web</span></label>
+        <p class="form-error" id="eventError" role="alert" hidden></p>
+        <div class="modal__inline-actions">
+          <button type="submit" class="btn btn--primary" id="eventSave">Guardar evento</button>
+        </div>
+
+        <section class="photos" id="eventPhotos">
+          <div class="photos__head">
+            <h3>Fotos</h3>
+            <label class="btn btn--light btn--sm file-btn" id="eventPhotosBtn">
+              + Subir fotos
+              <input type="file" id="eventPhotosInput" accept="image/jpeg,image/png,image/webp" multiple />
+            </label>
+          </div>
+          <p class="muted small" id="eventPhotosHint"></p>
+          <p class="upload-status" id="uploadStatus" role="status" hidden></p>
+          <div class="photos__grid" id="eventPhotosGrid"></div>
+        </section>
+      </div>
+      <footer class="modal__foot">
+        <button type="button" class="btn btn--ghost-dark" data-close>Cerrar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="../config.js"></script>
+  <script src="../assets/vendor/supabase.min.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

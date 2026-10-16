@@ -1,11 +1,13 @@
 /* =========================================================
    El Mejor Pancho de San Fernando — interacciones
    ========================================================= */
-(() => {
+(async () => {
   "use strict";
 
   /* -------------------------------------------------------
-     MENÚ — editá acá nombres, descripciones y precios.
+     MENÚ DE RESPALDO — los productos reales se cargan desde Supabase
+     y se editan en /admin. Este menú solo se usa si la base de datos
+     no está configurada o no responde.
      price: precio único · priceCash / priceTransfer: efectivo y transferencia
      sin precio → se muestra "Consultar" (o priceLabel si lo tiene)
      Panchos: sauces (colores) y toppings: morron | parmesano
@@ -16,7 +18,7 @@
     cheddar: "#F39C1F", picante: "#C2171B", miel: "#E0A526", chili: "#E8552E",
   };
 
-  const MENU = [
+  const FALLBACK_MENU = [
     {
       id: "panchos", label: "Panchos",
       items: [
@@ -73,35 +75,115 @@
     },
   ];
 
+  FALLBACK_MENU.forEach((c) => c.items.forEach((i) => (i.cat = c.id)));
+
+  // Tarjeta fija de "Los de la casa" (no es un producto)
+  const ARMALO = { name: "Armalo a tu gusto", badge: "9 salsas", desc: "De la Savora de toda la vida a la Sweet Chili de Pampa Gourmet. Elegí las que quieras.", priceLabel: "9 salsas", bg: "#7FA36D", sauces: [S.mostaza, S.ketchup, S.golf], toppings: ["morron"] };
+
   // Tarjetas grandes de "Los de la casa"
-  const FEATURED = [
-    { ...MENU[0].items[0], art: "#F5B72E" },
-    { ...MENU[1].items[0], art: "#F2B5A8" },
-    { name: "Armalo a tu gusto", badge: "9 salsas", desc: "De la Savora de toda la vida a la Sweet Chili de Pampa Gourmet. Elegí las que quieras.", priceLabel: "9 salsas", art: "#7FA36D", sauces: [S.mostaza, S.ketchup, S.golf], toppings: ["morron"] },
-    { ...MENU[3].items[5], name: "Con una Coquita", desc: "La coquita de vidrio de 237 cm³, la compañera ideal del pancho.", art: "#B9A3F0" },
+  const FALLBACK_FEATURED = [
+    { ...FALLBACK_MENU[0].items[0], bg: "#F5B72E" },
+    { ...FALLBACK_MENU[1].items[0], bg: "#F2B5A8" },
+    ARMALO,
+    { ...FALLBACK_MENU[3].items[5], name: "Con una Coquita", desc: "La coquita de vidrio de 237 cm³, la compañera ideal del pancho.", bg: "#B9A3F0" },
   ];
 
-  const SAUCES = [
+  const FALLBACK_SAUCES = [
     ["Mayonesa", "Natura", S.mayo], ["Mostaza", "Savora", S.mostaza], ["Ketchup", "Hellmann's", S.ketchup],
     ["Salsa Golf", "Hellmann's", S.golf], ["Parmesano", "", S.parmesano], ["Cheddar", "", S.cheddar],
     ["Salsa Picante", "", S.picante], ["Mostaza con Miel", "Pampa Gourmet", S.miel], ["Sweet Chili", "Pampa Gourmet", S.chili],
   ];
 
+  /* -------------------------------------------------------
+     Productos desde Supabase (ver assets/js/data.js)
+     ------------------------------------------------------- */
+  const D = window.PanchoData || null;
+  const esc = D ? D.esc : (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const HEX = /^#[0-9a-fA-F]{3,8}$/;
+  const col = (v, d) => (typeof v === "string" && HEX.test(v) ? v : d);
+  const num = (v) => (Number.isFinite(v) ? v : null);
+  const CARD_BGS = ["#F5B72E", "#F2B5A8", "#7FA36D", "#B9A3F0", "#E86A4F", "#F2C9A0"];
+  const DEFAULT_KIND = { tostadas: "toast", bebidas: "bottle", cervezas: "can" };
+
+  function toItem(p) {
+    const a = p.art && typeof p.art === "object" && !Array.isArray(p.art) ? p.art : {};
+    const item = {
+      cat: p.category,
+      name: p.name,
+      desc: p.description || "",
+      badge: p.badge || "",
+      featured: !!p.featured,
+      bg: col(a.bg, null),
+      image: p.image_path && D ? D.imageUrl(p.image_path) : null,
+    };
+    const price = num(p.price), cash = num(p.price_cash), transfer = num(p.price_transfer);
+    if (cash != null && transfer != null) { item.priceCash = cash; item.priceTransfer = transfer; }
+    else if ((price ?? cash ?? transfer) != null) item.price = price ?? cash ?? transfer;
+
+    const kind = ["bottle", "can", "cup", "toast"].includes(a.kind) ? a.kind : DEFAULT_KIND[p.category];
+    if (kind) {
+      item.kind = kind;
+      item.liquid = col(a.liquid, "#3B1A12");
+      item.label = col(a.label, "#E23B2E");
+      item.cap = col(a.cap, "#E23B2E");
+      item.band = col(a.band, "#121110");
+      item.small = a.small === true;
+      item.bubbles = a.bubbles === true;
+    } else {
+      const sauces = Array.isArray(a.sauces) ? a.sauces.filter((c) => HEX.test(c)).slice(0, 4) : [];
+      item.sauces = sauces.length ? sauces : p.category === "salsas" ? [S.ketchup] : [S.mostaza, S.ketchup];
+      item.toppings = Array.isArray(a.toppings) ? a.toppings.filter((t) => t === "morron" || t === "parmesano") : [];
+      if (a.bun === "parmesano") item.bun = "parmesano";
+    }
+    return item;
+  }
+
+  async function loadMenu() {
+    const fallback = { MENU: FALLBACK_MENU, FEATURED: FALLBACK_FEATURED, SAUCES: FALLBACK_SAUCES };
+    if (!D || !D.enabled) return fallback;
+    try {
+      const { categories, products } = await D.getMenu();
+      const menu = categories
+        .map((c) => ({ id: String(c.slug), label: c.name, items: products.filter((p) => p.category === c.slug).map(toItem) }))
+        .filter((c) => c.items.length);
+      if (!menu.length) return fallback;
+
+      const sauceItems = (menu.find((c) => c.id === "salsas") || { items: [] }).items;
+      const sauces = sauceItems.map((i) => [i.name, i.desc && !/[.!?]$/.test(i.desc) && i.desc.length <= 24 ? i.desc : "", i.sauces[0]]);
+
+      const featured = menu.flatMap((c) => c.items).filter((i) => i.featured)
+        .map((i, n) => ({ ...i, bg: i.bg || CARD_BGS[n % CARD_BGS.length] }));
+      if (sauceItems.length) {
+        const n = sauceItems.length;
+        featured.splice(Math.min(2, featured.length), 0, {
+          ...ARMALO, badge: `${n} salsas`, priceLabel: `${n} salsas`,
+          desc: `Elegí entre nuestras ${n} salsas y ponele las que quieras a tu pancho.`,
+        });
+      }
+      return { MENU: menu, FEATURED: featured, SAUCES: sauces };
+    } catch (err) {
+      console.warn("[menú] usando el menú de respaldo:", err.message);
+      return fallback;
+    }
+  }
+
+  const { MENU, FEATURED, SAUCES } = await loadMenu();
+
   const money = (n) => "$" + n.toLocaleString("es-AR");
-  const isSauce = (item) => !item.kind && !item.priceCash && !item.price && !item.priceLabel;
+  const isSauce = (item) => item.cat === "salsas";
 
   function priceHTML(item) {
-    if (item.priceCash) {
+    if (item.priceCash != null) {
       return `<span class="price-row">${money(item.priceCash)}<small>efectivo</small></span>` +
         `<span class="price-row price-row--alt">${money(item.priceTransfer)}<small>transferencia</small></span>`;
     }
-    if (item.price) return money(item.price);
-    if (item.priceLabel) return `<span class="price-na">${item.priceLabel}</span>`;
+    if (item.price != null) return money(item.price);
+    if (item.priceLabel) return `<span class="price-na">${esc(item.priceLabel)}</span>`;
     return isSauce(item) ? "" : `<span class="price-na">Consultar</span>`;
   }
   function priceText(item) {
-    if (item.priceCash) return `${money(item.priceCash)} en efectivo`;
-    if (item.price) return money(item.price);
+    if (item.priceCash != null) return `${money(item.priceCash)} en efectivo`;
+    if (item.price != null) return money(item.price);
     return isSauce(item) ? "para tu pancho" : "consultar precio";
   }
 
@@ -156,7 +238,7 @@
         `<circle cx="${x}" cy="${y}" r="3.2" fill="#FFF6DA" stroke="${INK}" stroke-width="1.5"/>`).join("");
     }
 
-    return `<svg viewBox="0 0 320 156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name || "Pancho"}">${out}</svg>`;
+    return `<svg viewBox="0 0 320 156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(item.name || "Pancho")}">${out}</svg>`;
   }
 
   function drinkSVG(item) {
@@ -185,7 +267,7 @@
       out += `<path d="M54 ${top + neck + 60} V${sm ? 140 : 130}" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".55"/>`;
       if (item.bubbles) out += [[80, 120], [96, 104], [70, 96], [90, 205], [64, 210]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>`).join("");
     }
-    return `<svg class="is-tall" viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name}">${out}</svg>`;
+    return `<svg class="is-tall" viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(item.name)}">${out}</svg>`;
   }
 
   function toastSVG(item) {
@@ -201,11 +283,15 @@
       return g;
     };
     const out = half(22, 20, 170) + half(128, 62, 172);
-    return `<svg viewBox="0 0 320 156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${item.name}">${out}</svg>`;
+    return `<svg viewBox="0 0 320 156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(item.name)}">${out}</svg>`;
   }
 
   const isTall = (item) => !!item.kind && item.kind !== "toast";
   const artSVG = (item) => (item.kind === "toast" ? toastSVG(item) : item.kind ? drinkSVG(item) : dogSVG(item));
+  // Si el producto tiene foto (cargada desde /admin), reemplaza al dibujo
+  const artHTML = (item) => item.image
+    ? `<img class="art-photo" src="${esc(item.image)}" alt="${esc(item.name)}" loading="lazy" decoding="async" />`
+    : artSVG(item);
 
   /* -------------------------------------------------------
      Render: los de la casa, menú, salsas
@@ -213,13 +299,13 @@
   const track = document.getElementById("specialsTrack");
   track.innerHTML = FEATURED.map((item, i) => `
     <article class="special">
-      <div class="special__art" style="--art-bg:${item.art}">
-        ${item.badge ? `<span class="special__tag">${item.badge}</span>` : ""}
-        ${artSVG(item)}
+      <div class="special__art${item.image ? " has-photo" : ""}" style="--art-bg:${col(item.bg, "#F5B72E")}">
+        ${item.badge ? `<span class="special__tag">${esc(item.badge)}</span>` : ""}
+        ${artHTML(item)}
       </div>
       <div class="special__body">
-        <h3 class="special__name">${item.name}</h3>
-        <p class="special__desc">${item.desc}</p>
+        <h3 class="special__name">${esc(item.name)}</h3>
+        <p class="special__desc">${esc(item.desc)}</p>
         <div class="special__foot">
           <span class="special__price">${priceHTML(item)}</span>
           <span class="special__num">${String(i + 1).padStart(2, "0")} / ${String(FEATURED.length).padStart(2, "0")}</span>
@@ -233,12 +319,13 @@
   const previewName = document.getElementById("previewName");
 
   tabs.innerHTML = MENU.map((c, i) =>
-    `<button class="menu__tab" role="tab" id="tab-${c.id}" aria-selected="${i === 0}" aria-controls="menuList" data-cat="${c.id}">${c.label}</button>`
+    `<button class="menu__tab" role="tab" id="tab-${esc(c.id)}" aria-selected="${i === 0}" aria-controls="menuList" data-cat="${esc(c.id)}">${esc(c.label)}</button>`
   ).join("");
 
   function setPreview(item) {
-    previewDog.innerHTML = artSVG(item);
-    previewDog.classList.toggle("is-tall", isTall(item));
+    previewDog.innerHTML = artHTML(item);
+    previewDog.classList.toggle("is-tall", !item.image && isTall(item));
+    previewDog.classList.toggle("is-photo", !!item.image);
     previewDog.classList.remove("is-swap");
     void previewDog.offsetWidth;
     previewDog.classList.add("is-swap");
@@ -246,14 +333,14 @@
   }
 
   function renderCategory(id) {
-    const cat = MENU.find((c) => c.id === id);
+    const cat = MENU.find((c) => c.id === id) || MENU[0];
     list.setAttribute("aria-labelledby", `tab-${id}`);
     list.innerHTML = cat.items.map((item, i) => `
       <article class="menu-item is-enter" style="animation-delay:${i * 50}ms" data-i="${i}" data-cursor="Mmm" tabindex="0">
         <span class="menu-item__num">${String(i + 1).padStart(2, "0")}</span>
-        <h3 class="menu-item__name">${item.name}${item.badge ? `<span class="menu-item__badge">${item.badge}</span>` : ""}</h3>
+        <h3 class="menu-item__name">${esc(item.name)}${item.badge ? `<span class="menu-item__badge">${esc(item.badge)}</span>` : ""}</h3>
         <span class="menu-item__price">${priceHTML(item)}</span>
-        ${item.desc ? `<p class="menu-item__desc">${item.desc}</p>` : ""}
+        ${item.desc ? `<p class="menu-item__desc">${esc(item.desc)}</p>` : ""}
       </article>`).join("");
     list.querySelectorAll(".menu-item").forEach((el) => {
       const item = cat.items[+el.dataset.i];
@@ -280,7 +367,7 @@
   });
 
   document.getElementById("sauceChips").innerHTML = SAUCES.map(([n, b, c]) =>
-    `<span class="chip" style="--c:${c}"><i></i>${n}${b ? `<small>${b}</small>` : ""}</span>`).join("");
+    `<span class="chip" style="--c:${col(c, "#E23B2E")}"><i></i>${esc(n)}${b ? `<small>${esc(b)}</small>` : ""}</span>`).join("");
 
   const yearsEl = document.getElementById("years");
   if (yearsEl) yearsEl.textContent = new Date().getFullYear() - 2004;
